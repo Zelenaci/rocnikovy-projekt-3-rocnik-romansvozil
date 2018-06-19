@@ -5,6 +5,10 @@
 #imports
 import random
 
+
+#global
+score = 0
+
 #vytvareni pole (x,y)
 def fillMatrix(x,y):
 	matrix = []
@@ -61,6 +65,7 @@ def isFull(matrix):
 						
 #pohyb, doleva
 def moveLeft(matrix):
+	global score
 	x = whatIsXY(matrix)[0]
 	y = whatIsXY(matrix)[1]
 	continue_counter = False
@@ -70,7 +75,7 @@ def moveLeft(matrix):
 		nonull_matrix.append([])
 		for j in range(0,x):
 			if matrix[i][j] != 0:
-				nonull_matrix[i].append([matrix[i][j],[i,j]])
+				nonull_matrix[i].append(matrix[i][j])
 	
 	for q in range(0,len(nonull_matrix)):
 		continue_counter = False
@@ -83,13 +88,14 @@ def moveLeft(matrix):
 				continue_counter = False
 				continue
 			try:
-				if nonull_matrix[q][w][0] == nonull_matrix[q][w+1][0]:
-					new_matrix[q].append(2 * nonull_matrix[q][w][0])
+				if nonull_matrix[q][w] == nonull_matrix[q][w+1]:
+					score += 2* nonull_matrix[q][w]
+					new_matrix[q].append(2 * nonull_matrix[q][w])
 					continue_counter = True			
 				else: 
-					new_matrix[q].append(nonull_matrix[q][w][0])
+					new_matrix[q].append(nonull_matrix[q][w])
 			except:
-					new_matrix[q].append(nonull_matrix[q][w][0])
+					new_matrix[q].append(nonull_matrix[q][w])
 	
 	for q in range(0,len(new_matrix)):
 		null_count = x - len(new_matrix[q])
@@ -151,7 +157,9 @@ def whatIsXY(matrix):
 
 
 def main():
+	global score
 	vertical = horizontal = 1
+	score = 0
 	size = int(input("size: "))
 	matrix = fillMatrix(size,size)
 	
@@ -160,9 +168,11 @@ def main():
 		
 		for i in range(0,len(matrix)):
 			print(matrix[i])
-			
+		
+		print("SCORE: " + repr(score))	
 		if isFull(matrix):
 			if isEnd(matrix)[0]:
+				print("Prohrál si se skórem: " + repr(score))
 				exit(0)
 			else:
 				if isEnd(matrix)[1] == 1:
